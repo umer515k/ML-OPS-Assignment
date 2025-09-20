@@ -2,8 +2,8 @@ pipeline {
   agent any
   environment {
     DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-    DOCKER_IMAGE = "yourdockerhubusername/deploymlmodel-flask"
-    ADMIN_EMAIL = "admin@example.com"
+    DOCKER_IMAGE = "umer515k/ML-OPS project"
+    ADMIN_EMAIL = "umerkhalil515k@gmail.com
   }
   stages {
     stage('Checkout') {
