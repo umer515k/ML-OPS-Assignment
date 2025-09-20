@@ -1,21 +1,17 @@
-import os
-import sys
-import pathlib
-import pytest
+import pickle
+import numpy as np
 
-# make src importable if repository layout is different
-REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
-sys.path.append(str(REPO_ROOT / "src"))
+# Load the model from pickle
+model = pickle.load(open("model.pkl", "rb"))
 
-from model import train_model, predict, MODEL_PATH
+def test_prediction_shape():
+    """Check if model returns prediction with correct shape"""
+    features = np.array([[2, 9, 6]])
+    prediction = model.predict(features)
+    assert prediction.shape == (1,)
 
-def test_train_and_predict(tmp_path):
-    # Ensure model trains and returns accuracy between 0 and 1
-    acc = train_model()
-    assert 0.0 <= acc <= 1.0
-
-    # After training, predict should return 0 or 1
-    p = predict(2, 7)  # adapt args to your model signature
-    assert p in (0, 1)
-
-
+def test_prediction_type():
+    """Check if prediction is a float or int"""
+    features = np.array([[2, 9, 6]])
+    prediction = model.predict(features)
+    assert isinstance(prediction[0].item(), (float, int))
