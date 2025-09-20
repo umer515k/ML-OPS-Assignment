@@ -1,28 +1,47 @@
-# Importing the libraries
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
+import os
 import pickle
-
-dataset = pd.read_csv('hiring.csv')
-
-x = dataset.iloc[:, :3]
-y = dataset.iloc[:, -1]
-
-#Splitting Training and Test Set
-#Since we have a very small dataset, we will train our model with all availabe data.
-
+import pandas as pd
 from sklearn.linear_model import LinearRegression
-regressor = LinearRegression()
 
-#Fitting model with trainig data
-regressor.fit(x, y)
+# Paths
+DATASET_PATH = os.path.join(os.getcwd(), "datasets", "hiring.csv")
+MODEL_PATH = os.path.join(os.getcwd(), "src", "model.pkl")
 
-# Saving model to disk
-pickle.dump(regressor, open('model.pkl','wb'))
 
-'''
-# Loading model to compare the results
-model = pickle.load(open('model.pkl','rb'))
-print(model.predict([[2, 9, 6]]))
-'''
+def train_model():
+    """Train the regression model and save it to disk."""
+    dataset = pd.read_csv(DATASET_PATH)
+
+    X = dataset.iloc[:, :3]
+    y = dataset.iloc[:, -1]
+
+    regressor = LinearRegression()
+    regressor.fit(X, y)
+
+    # Save trained model
+    with open(MODEL_PATH, "wb") as f:
+        pickle.dump(regressor, f)
+
+    return regressor
+
+
+def load_model():
+    """Load the saved model from disk."""
+    if not os.path.exists(MODEL_PATH):
+        raise FileNotFoundError("Model not trained yet. Run train_model().")
+
+    with open(MODEL_PATH, "rb") as f:
+        model = pickle.load(f)
+    return model
+
+
+def predict(features):
+    """
+    Predict using the trained model.
+    Args:
+        features (list or tuple): e.g. [2, 9, 6]
+    Returns:
+        float: prediction result
+    """
+    model = load_model()
+    return model.predict([features])[0]
