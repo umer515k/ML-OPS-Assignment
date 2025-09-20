@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
+
 def test_model_prediction():
     # Train a tiny dummy model
     X = np.array([[1, 1, 1], [2, 2, 2], [3, 3, 3]])
